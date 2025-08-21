@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign In — Let’s Go! 🚀</title>
+  <meta name="color-scheme" content="dark light">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-1: #0f1020;
+      --bg-2: #0a0b16;
+      --fg: #e8eaf6;
+      --muted: #b6b9ff;
+      --primary: #8a6cff;
+      --secondary: #00d4ff;
+      --accent: #ff7ad9;
+      --success: #43ffb3;
+      --warning: #ffd166;
+      --danger: #ff5d73;
+      --glass: 255,255,255; /* for rgba */
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--fg);
+      background: radial-gradient(1200px 800px at 10% 10%, rgba(138,108,255,.15), transparent 50%),
+                  radial-gradient(1000px 700px at 90% 30%, rgba(0,212,255,.18), transparent 55%),
+                  radial-gradient(900px 600px at 50% 100%, rgba(255,122,217,.12), transparent 60%),
+                  conic-gradient(from 180deg at 50% 50%, #0d0e1b 0deg, #0b0c19 90deg, #0a0b16 180deg, #0d0e1b 270deg, #0b0c19 360deg);
+      overflow: hidden;
+    }
+
+    /* Animated gradient aurora */
+    .aurora{
+      position: fixed; inset: -30vmax;
+      background: radial-gradient(closest-side, rgba(138,108,255,.15), transparent),
+                  radial-gradient(closest-side, rgba(0,212,255,.12), transparent),
+                  radial-gradient(closest-side, rgba(255,122,217,.12), transparent);
+      filter: blur(50px) saturate(120%);
+      animation: float 22s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes float {
+      0% { transform: translate(-8%, -6%) rotate(0deg) scale(1.05); }
+      50% { transform: translate(6%, 4%) rotate(15deg) scale(1.1); }
+      100% { transform: translate(-4%, 10%) rotate(-10deg) scale(1.06); }
+    }
+
+    /* Confetti particles (pure CSS) */
+    .sparkles {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background-image:
+        radial-gradient(2px 2px at 10% 20%, #fff, transparent),
+        radial-gradient(2px 2px at 30% 80%, #8a6cff, transparent),
+        radial-gradient(2px 2px at 60% 10%, #00d4ff, transparent),
+        radial-gradient(2px 2px at 80% 70%, #ff7ad9, transparent),
+        radial-gradient(1.5px 1.5px at 50% 50%, #43ffb3, transparent);
+      animation: twinkle 6s linear infinite;
+      opacity: .6;
+    }
+    @keyframes twinkle { 0%{transform:translateY(0)} 100%{transform:translateY(-30px)} }
+
+    /* Layout */
+    .wrap{
+      position: relative; z-index: 2;
+      min-height: 100dvh; display: grid; place-items: center; padding: 6vmin;
+    }
+
+    .card{
+      width: min(960px, 92vw);
+      background: linear-gradient(180deg, rgba(var(--glass),.12), rgba(var(--glass),.06));
+      backdrop-filter: blur(14px) saturate(120%);
+      -webkit-backdrop-filter: blur(14px) saturate(120%);
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(138,108,255,.15) inset;
+      overflow: hidden;
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 0;
+    }
+
+    /* Left panel — hype zone */
+    .left{
+      position: relative; padding: clamp(24px, 5vmin, 48px);
+      display: grid; align-content: center; gap: 22px; isolation: isolate;
+      background: linear-gradient(135deg, rgba(138,108,255,.15), rgba(0,212,255,.12));
+    }
+    .badge{
+      align-self: start; display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 14px; border-radius: 999px; font-weight: 700; letter-spacing: .4px; font-size: 12px;
+      background: rgba(138,108,255,.28);
+      border: 1px solid rgba(138,108,255,.45);
+      text-transform: uppercase;
+    }
+    .badge svg{ width: 16px; height: 16px; }
+
+    h1{
+      margin: 0; font-size: clamp(28px, 5.2vmin, 56px); line-height: 1.05; font-weight: 800;
+      text-shadow: 0 4px 30px rgba(138,108,255,.35);
+    }
+    .sub{
+      margin: 0; color: var(--muted); font-weight: 400; font-size: clamp(14px, 2.2vmin, 18px);
+    }
+
+    .feature-list{
+      margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 10px;
+    }
+    .feature-list li{ display: flex; gap: 12px; align-items: center; font-weight: 600; }
+    .feature-list svg{ flex: 0 0 auto; width: 18px; height: 18px; filter: drop-shadow(0 2px 10px rgba(67,255,179,.4)); }
+
+    /* Right panel — form */
+    .right{
+      position: relative; padding: clamp(20px, 4.6vmin, 44px);
+      background:
+        radial-gradient(120% 80% at 100% 0%, rgba(67,255,179,.09), transparent 60%),
+        radial-gradient(100% 70% at 10% 100%, rgba(255,93,115,.07), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+    }
+
+    form{ display: grid; gap: 16px; }
+
+    label{ font-size: 13px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; opacity: .9; }
+
+    .field{
+      position: relative; display: grid; gap: 8px;
+    }
+
+    .input{
+      width: 100%;
+      background: rgba(8,10,28,.6);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 16px; padding: 14px 44px 14px 44px; color: var(--fg);
+      outline: none;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,.08), 0 0 0 0 rgba(138,108,255,.4);
+      transition: box-shadow .2s ease, border-color .2s ease, transform .05s ease;
+      font-size: 16px;
+    }
+    .input:focus{
+      border-color: rgba(138,108,255,.9);
+      box-shadow: 0 0 0 6px rgba(138,108,255,.12), 0 8px 28px rgba(138,108,255,.25);
+      transform: translateY(-1px);
+    }
+
+    .icon{
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      width: 20px; height: 20px; opacity: .9;
+    }
+    .action{
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      display: grid; place-items: center; width: 34px; height: 34px;
+      border-radius: 10px; border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06); cursor: pointer; user-select: none;
+    }
+
+    .row{ display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+    .btn{
+      appearance: none; border: 0; cursor: pointer; font-weight: 800; letter-spacing: .3px;
+      padding: 14px 18px; border-radius: 16px; font-size: 16px; color: #0a0b16;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 12px 32px rgba(138,108,255,.5), 0 0 0 0 rgba(255,255,255,.2) inset;
+      transition: transform .06s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .btn:hover{ filter: brightness(1.08) saturate(115%); }
+    .btn:active{ transform: translateY(1px) scale(.995); box-shadow: 0 8px 20px rgba(138,108,255,.45); }
+
+    .oauth{
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;
+    }
+    .oauth button{
+      background: rgba(255,255,255,.06);
+      color: var(--fg);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 14px; padding: 12px 14px; font-weight: 700; cursor: pointer;
+      transition: transform .06s ease, box-shadow .2s ease;
+    }
+    .oauth button:hover{ box-shadow: 0 8px 24px rgba(0,212,255,.25); }
+    .oauth button:active{ transform: translateY(1px); }
+
+    .links{ display: flex; gap: 14px; align-items: center; }
+    a{ color: var(--secondary); text-decoration: none; font-weight: 700; }
+    a:hover{ text-decoration: underline; }
+
+    .note{ font-size: 12px; color: #cfd2ff; opacity: .9; }
+
+    /* Responsive */
+    @media (max-width: 880px){
+      .card{ grid-template-columns: 1fr; }
+      .left{ order: 2; text-align: center; }
+      .feature-list{ justify-items: center; }
+      .right{ order: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="sparkles" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <section class="card" role="dialog" aria-labelledby="title" aria-describedby="subtitle">
+      <!-- Left hype panel -->
+      <div class="left">
+        <span class="badge" aria-hidden="true">
+          <!-- Firework icon -->
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="#ffd166" stroke-width="2" stroke-linecap="round"/></svg>
+          New vibes
+        </span>
+        <h1 id="title">Welcome back — unleash your day!</h1>
+        <p id="subtitle" class="sub">Sign in and dive into a kinetic world of gradients, glow, and good energy. We kept it fast, accessible, and ridiculously fun. 💫</p>
+        <ul class="feature-list" aria-label="Perks">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5 12l4 4L19 6" stroke="#43ffb3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Fast, secure auth
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2l2.39 4.84 5.34.78-3.86 3.76.91 5.32L12 14.77 6.22 16.7l.91-5.32L3.27 7.62l5.34-.78L12 2z" stroke="#ffd166" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Delightful micro‑interactions
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 12h18M3 12a9 9 0 0018 0 9 9 0 10-18 0z" stroke="#8a6cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Responsive & accessible
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right form panel -->
+      <div class="right">
+        <form action="#" method="post" autocomplete="on" novalidate onsubmit="event.preventDefault(); celebr8();">
+          <div class="field">
+            <label for="email">Email or Username</label>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 8l8 5 8-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="6" width="18" height="12" rx="2" ry="2" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+            <input class="input" id="email" name="email" type="text" placeholder="you@galaxy.dev" required aria-required="true" />
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M7 11V8a5 5 0 0110 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <input class="input" id="password" name="password" type="password" placeholder="••••••••" required aria-required="true" />
+            <button type="button" class="action" aria-pressed="false" aria-label="Show password" onclick="togglePw(this)">
+              <svg id="eye-open" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
+            </button>
+          </div>
+
+          <div class="row">
+            <label class="note" style="display:flex; align-items:center; gap:8px; cursor: pointer;">
+              <input id="remember" name="remember" type="checkbox" style="accent-color: var(--primary); width:16px; height:16px;">
+              <span>Remember me</span>
+            </label>
+            <div class="links">
+              <a href="#" onclick="snack('Password reset link sent ✉️'); return false;">Forgot?</a>
+              <a href="#" onclick="snack('Create account coming soon ✨'); return false;">Create account</a>
+            </div>
+          </div>
+
+          <button class="btn" type="submit">Sign In</button>
+
+          <div class="oauth">
+            <button type="button" onclick="snack('Sign in with Google')">Continue with Google</button>
+            <button type="button" onclick="snack('Sign in with GitHub')">Continue with GitHub</button>
+          </div>
+
+          <p class="note">By continuing you agree to our <a href="#" onclick="snack('Terms opened')">Terms</a> and <a href="#" onclick="snack('Privacy opened')">Privacy</a>.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast / confetti scripts -->
+  <script>
+    function togglePw(btn){
+      const input = document.getElementById('password');
+      const isPwd = input.getAttribute('type') === 'password';
+      input.setAttribute('type', isPwd ? 'text' : 'password');
+      btn.setAttribute('aria-pressed', isPwd ? 'true' : 'false');
+      btn.setAttribute('aria-label', isPwd ? 'Hide password' : 'Show password');
+    }
+
+    function celebr8(){
+      snack('Signed in! Welcome back 🎉');
+      burst();
+    }
+
+    function snack(msg){
+      const el = document.createElement('div');
+      el.textContent = msg;
+      Object.assign(el.style, {
+        position: 'fixed', left: '50%', bottom: '26px', transform: 'translateX(-50%)',
+        padding: '12px 16px', borderRadius: '12px', fontWeight: '800',
+        background: 'rgba(255,255,255,.12)', color: 'white',
+        border: '1px solid rgba(255,255,255,.2)', backdropFilter: 'blur(10px)',
+        boxShadow: '0 8px 24px rgba(0,0,0,.4)', zIndex: 9999
+      });
+      document.body.appendChild(el);
+      setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .4s'; }, 1400);
+      setTimeout(()=>{ el.remove(); }, 1800);
+    }
+
+    function burst(){
+      for(let i=0;i<36;i++){
+        const p = document.createElement('div');
+        const size = Math.random()*6+6;
+        p.style.position='fixed';
+        p.style.left='50%'; p.style.top='50%';
+        p.style.width=size+'px'; p.style.height=size+'px';
+        p.style.borderRadius='999px';
+        p.style.background=['#8a6cff','#00d4ff','#ff7ad9','#43ffb3','#ffd166'][i%5];
+        p.style.boxShadow='0 0 18px rgba(255,255,255,.4)';
+        p.style.pointerEvents='none'; p.style.zIndex=9998;
+        const ang = Math.random()*360, dist = Math.random()*180+80;
+        const tx = Math.cos(ang*Math.PI/180)*dist;
+        const ty = Math.sin(ang*Math.PI/180)*dist;
+        p.animate([
+          { transform:'translate(-50%,-50%) scale(1)', opacity:1 },
+          { transform:`translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(.3)`, opacity:0 }
+        ], { duration: 900 + Math.random()*400, easing:'cubic-bezier(.2,.7,.2,1)', fill:'forwards' });
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(), 1500);
+      }
+    }
+  </script>
+</body>
+</html>
