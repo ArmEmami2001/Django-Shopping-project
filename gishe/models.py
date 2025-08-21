@@ -33,3 +33,24 @@ class Customer(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+class Order(models.Model):
+    state_pending = "P"
+    state_shipped = "S"
+    state_delivered = "D"
+    state_cancelled = "C"
+    state_choices = [
+        (state_pending, "Pending"),
+        (state_shipped, "Shipped"),
+        (state_delivered, "Delivered"),
+        (state_cancelled, "Cancelled"),
+    ]
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    order_date = models.DateTimeField(auto_now_add=True)
+    state_order = models.CharField(max_length=1, choices=state_choices, default=state_pending)
+    order_number = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return f"Order {self.id} by {self.customer}"
