@@ -42,7 +42,12 @@ class Customer(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+
+
 class Order(models.Model):
+    #one order has multiple order items
+    #one product can be in multiple order items but one order item is for one product
+    #one to one and one to many is written in child (the many side) IMPORTANTTTTTTTTTTTTTTTTTT
     state_pending = "P"
     state_shipped = "S"
     state_delivered = "D"
@@ -54,17 +59,25 @@ class Order(models.Model):
         (state_cancelled, "Cancelled"),
     ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    product = models.ManyToManyField(Product)
+    # product = models.ManyToManyField(Product)
     #one to one is onetoonefield one to many is foreign key and many to amny is manytomany field
     #customer is foreign key why? because each order is associated with a specific customer
     #order is many to many field why? because an order can contain multiple products and a product can be part of multiple orders
-    quantity = models.PositiveIntegerField()
+    # quantity = models.PositiveIntegerField()
     order_date = models.DateTimeField(auto_now_add=True)
     state_order = models.CharField(max_length=1, choices=state_choices, default=state_pending)
     order_number = models.CharField(max_length=20, unique=True)
 
     def __str__(self):
         return f"Order {self.id} by {self.customer}"
+    
+class OrderItems(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"Order Item {self.product.name}"
 
 class Address(models.Model):
     customer = models.OneToOneField(Customer, primary_key=True, on_delete=models.CASCADE )
