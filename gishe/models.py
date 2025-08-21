@@ -1,7 +1,7 @@
 from django.db import models
 
 class Product(models.Model):
-    name = models.CharField(max_length=255, min_length=1)
+    name = models.CharField(max_length=255)
     description = models.TextField(max_length=1000, blank=True)
     price = models.DecimalField(max_digits=11, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -18,6 +18,7 @@ class Customer(models.Model):
     phone_number = models.CharField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    state_of_membership = models.CharField(max_length= 6, choices=[("vip", "VIP Customer"), ("cip", "CIP Customer"), ("normal", "Normal Customer")], default="normal")
     wishlist = models.ManyToManyField(Product, related_name='wishlisted_by', blank=True)
     shopping_cart = models.ManyToManyField(Product, related_name='in_cart_by', blank=True)
 
