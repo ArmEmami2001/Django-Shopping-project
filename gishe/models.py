@@ -9,7 +9,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
     description = models.TextField(max_length=1000, blank=True)
     price = models.DecimalField(max_digits=11, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
