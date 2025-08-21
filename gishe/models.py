@@ -54,3 +54,14 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} by {self.customer}"
+
+class Address(models.Model):
+    customer = models.OneToOneField(Customer, primary_key=True, on_delete=models.CASCADE)
+    street = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    #ONE TO ONE RELATION IS WRITTEN IN CHILD NOT PARENT SO IN ADDRESS
+    state = models.CharField(max_length=100)
+    zip_code = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f"Address for {self.customer}: {self.street}, {self.city}, {self.state}, {self.zip_code}"
