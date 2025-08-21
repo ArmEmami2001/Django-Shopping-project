@@ -12,13 +12,22 @@ class Product(models.Model):
         return self.name
 
 class Customer(models.Model):
+    state_vip = "V"
+    state_cip = "C"
+    state_normal = "N"
+    state_choices = [
+        (state_vip, "VIP Customer"),
+        (state_cip, "CIP Customer"),
+        (state_normal, "Normal Customer"),
+    ]
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    state_of_membership = models.CharField(max_length= 6, choices=[("vip", "VIP Customer"), ("cip", "CIP Customer"), ("normal", "Normal Customer")], default="normal")
+    state_of_membership = models.CharField(max_length=1, choices=state_choices, default=state_normal)
+    # state_of_membership = models.CharField(max_length= 6, choices=[("vip", "VIP Customer"), ("cip", "CIP Customer"), ("normal", "Normal Customer")], default="normal")
     wishlist = models.ManyToManyField(Product, related_name='wishlisted_by', blank=True)
     shopping_cart = models.ManyToManyField(Product, related_name='in_cart_by', blank=True)
 
