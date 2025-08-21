@@ -1,7 +1,15 @@
 from django.db import models
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     description = models.TextField(max_length=1000, blank=True)
     price = models.DecimalField(max_digits=11, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -46,7 +54,10 @@ class Order(models.Model):
         (state_cancelled, "Cancelled"),
     ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ManyToManyField(Product)
+    #one to one is onetoonefield one to many is foreign key and many to amny is manytomany field
+    #customer is foreign key why? because each order is associated with a specific customer
+    #order is many to many field why? because an order can contain multiple products and a product can be part of multiple orders
     quantity = models.PositiveIntegerField()
     order_date = models.DateTimeField(auto_now_add=True)
     state_order = models.CharField(max_length=1, choices=state_choices, default=state_pending)
@@ -56,7 +67,11 @@ class Order(models.Model):
         return f"Order {self.id} by {self.customer}"
 
 class Address(models.Model):
-    customer = models.OneToOneField(Customer, primary_key=True, on_delete=models.CASCADE)
+    customer = models.OneToOneField(Customer, primary_key=True, on_delete=models.CASCADE )
+    # models.CASCADE will delete the address if the customer is deleted
+    # models.SET_NULL will set the customer to null if the address is deleted
+    # models.SET_DEFAULT will set the customer to a default value if the address is deleted
+    # models.PROTECT will prevent the address from being deleted if it is referenced by a customer
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
     #ONE TO ONE RELATION IS WRITTEN IN CHILD NOT PARENT SO IN ADDRESS
@@ -65,3 +80,5 @@ class Address(models.Model):
 
     def __str__(self):
         return f"Address for {self.customer}: {self.street}, {self.city}, {self.state}, {self.zip_code}"
+    
+
