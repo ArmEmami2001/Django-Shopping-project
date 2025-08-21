@@ -7,6 +7,15 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+class Promotion(models.Model):
+    code = models.CharField(max_length=100, unique=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    duration = models.DurationField(help_text="Duration of the promotion in days")
+    # product_set = models.ManyToManyField(Product, related_name='promotions', blank=True)
+
+    def __str__(self):
+        return f"Promotion {self.code}: {self.discount_amount} off"
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
@@ -15,6 +24,8 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     remaining_stock = models.PositiveIntegerField(default=0)
+    promotion = models.ManyToManyField(Promotion, related_name='products', blank=True)
+    #related name is for reverse access from promotion to products
 
     def __str__(self):
         return self.name
@@ -93,5 +104,4 @@ class Address(models.Model):
 
     def __str__(self):
         return f"Address for {self.customer}: {self.street}, {self.city}, {self.state}, {self.zip_code}"
-    
 
