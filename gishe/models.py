@@ -18,7 +18,7 @@ class Promotion(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products',null=True, blank=True)
     description = models.TextField(max_length=1000, blank=True)
     price = models.DecimalField(max_digits=11, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -39,8 +39,7 @@ class Customer(models.Model):
         (state_cip, "CIP Customer"),
         (state_normal, "Normal Customer"),
     ]
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
