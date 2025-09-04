@@ -52,7 +52,11 @@ class Customer(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-
+    # class Meta:
+    #     db_table = 'gishe_customers'
+    #     indexes = [
+    #         models.Index(fields=['name', 'email']),
+    #     ]
 
 class Order(models.Model):
     #one order has multiple order items
